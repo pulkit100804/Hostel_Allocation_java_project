@@ -29,3 +29,24 @@ public class Student {
             }
         }
     }
+
+    private static void viewAssignedRoom(String username) {
+        try (Connection conn = DBConnection.getConnection()) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT room_no FROM room_allocations WHERE student_username = '" + username + "'");
+
+            if (rs.next()) {
+                System.out.println("✅ Your assigned room is: Room " + rs.getInt("room_no"));
+            } else {
+                System.out.println("❌ No room assigned.");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            System.out.println("❌ Error fetching room info: " + e.getMessage());
+        }
+    }
+}
+
+    
