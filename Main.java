@@ -5,3 +5,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         UserAuth.checkFile();  // Ensure users.txt exists
         boolean running = true;
+
+        while (running) {
+            System.out.println("\n🏨 Hostel Management System 🏨");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
