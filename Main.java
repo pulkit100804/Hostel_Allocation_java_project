@@ -14,3 +14,15 @@ public class Main {
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    UserAuth.registerUser();
+                    break;
+                case 2:
+                    UserAuth.loginUser();
+                    break;
+                case 3:
+                    System.out.println("Exiting... 🏁");
+                    running = false;
+                    break;
