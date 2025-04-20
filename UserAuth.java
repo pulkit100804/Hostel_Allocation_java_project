@@ -14,7 +14,6 @@ class InvalidRoleException extends Exception {
         super(message);
     }
 }
-
 public class UserAuth {
     private static final String FILE_NAME = "users.txt";
 
