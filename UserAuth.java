@@ -46,7 +46,7 @@ public class UserAuth {
 
         String role = validateUser(username, password);
         if (role == null) {
-            System.out.println("❌ Invalid credentials!");
+            System.out.println("Invalid credentials!");
             return;
         }
 
@@ -57,5 +57,19 @@ public class UserAuth {
         } else {
             Student.studentMenu(username);
         }
+    }
+
+    private static boolean userExists(String username) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts[0].equals(username)) {
+                br.close();
+                return true;
+            }
+        }
+        br.close();
+        return false;
     }
 
