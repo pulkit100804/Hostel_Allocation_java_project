@@ -1,43 +1,50 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
 
-public class Hostel {
-    private static final int totalRooms = 10;
+public class Student {
+    public static void studentMenu(String username) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
 
-    public int allocateRoom(String username) {
-        Connection conn = DBConnection.getConnection();
-        Statement stmt = conn.createStatement();
+        while (running) {
+            System.out.println("\n🏠 Student Panel 🏠");
+            System.out.println("1. View Assigned Room");
+            System.out.println("2. Logout");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        for (int i = 1; i <= totalRooms; i++) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations WHERE room_no = " + i);
-            if (!rs.next()) {
-                PreparedStatement insertStmt = conn.prepareStatement(
-                    "INSERT INTO room_allocations (room_no, student_username) VALUES (?, ?)"
-                );
-                insertStmt.setInt(1, i);
-                insertStmt.setString(2, username);
-                insertStmt.executeUpdate();
-                return i;
+            switch (choice) {
+                case 1:
+                    viewAssignedRoom(username);
+                    break;
+                case 2:
+                    running = false;
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("❌ Invalid choice.");
             }
-            rs.close();
         }
-
-        return -1;
     }
 
-    public void showRoomAllocation() {
-        Connection conn = DBConnection.getConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations");
+    private static void viewAssignedRoom(String username) {
+        try (Connection conn = DBConnection.getConnection()) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT room_no FROM room_allocations WHERE student_username = '" + username + "'");
 
-        if (!rs.isBeforeFirst()) {
-            System.out.println("No rooms allocated.");
-            return;
+            if (rs.next()) {
+                System.out.println("✅ Your assigned room is: Room " + rs.getInt("room_no"));
+            } else {
+                System.out.println("❌ No room assigned.");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            System.out.println("❌ Error fetching room info: " + e.getMessage());
         }
-
-        while (rs.next()) {
-            System.out.println("Room " + rs.getInt("room_no") + " -> " + rs.getString("student_username"));
-        }
-
-        rs.close();
     }
 }
