@@ -1,3 +1,4 @@
+//No exception handling required at this stage 
 import java.util.Scanner;
 
 public class Main {
