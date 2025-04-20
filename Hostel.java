@@ -25,7 +25,7 @@ public class Hostel {
         return -1;
     }
         
-    public void showRoomAllocation() {
+   public void showRoomAllocation() {
         try (Connection conn = DBConnection.getConnection()) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations");
