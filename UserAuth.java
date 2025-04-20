@@ -65,16 +65,20 @@ public class UserAuth {
         }
     }
 
-    private static boolean userExists(String username) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts[0].equals(username)) {
-                br.close();
-                return true;
+    private static boolean userExists(String username) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(username)) {
+                    return true;
+                }
             }
+        } catch (IOException e) {
+            System.out.println("❌ Error reading file.");
         }
+        return false;
+    }
         br.close();
         return false;
     }
