@@ -1,3 +1,4 @@
+// No exception is required at this stage
 public class Room {
     private int roomNumber;
     private boolean isOccupied;
