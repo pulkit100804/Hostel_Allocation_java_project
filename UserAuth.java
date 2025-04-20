@@ -79,7 +79,20 @@ public class UserAuth {
         }
         return false;
     }
-        br.close();
-        return false;
+    private static String validateUser(String username, String password) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(username) && parts[1].equals(password)) {
+                    return parts[2]; // Return role
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("❌ Error reading file.");
+        }
+        return null;
     }
+}
+
 
