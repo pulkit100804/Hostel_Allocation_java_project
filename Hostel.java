@@ -2,6 +2,24 @@
 import java.sql.*;
 import java.util.*;
 
+class RoomAlreadyAllocatedException extends Exception {
+    public RoomAlreadyAllocatedException(String message) {
+        super(message);
+    }
+}
+
+class RoomAllocationLimitReachedException extends Exception {
+    public RoomAllocationLimitReachedException(String message) {
+        super(message);
+    }
+}
+
+class RoomDataFetchException extends Exception {
+    public RoomDataFetchException(String message) {
+        super(message);
+    }
+}
+
 public class Hostel {
     private static final int totalRooms = 10;
 
