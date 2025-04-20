@@ -13,5 +13,10 @@ public abstract class User {
         return username;
     }
 
-    
+    public String getRole() {
+        return role;
+    }
 
+    public abstract void displayInfo();
+}
+    
