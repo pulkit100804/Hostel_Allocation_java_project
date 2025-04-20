@@ -4,11 +4,15 @@ import java.util.Scanner;
 public class UserAuth {
     private static final String FILE_NAME = "users.txt";
 
-    public static void checkFile() throws IOException {
+    public static void checkFile() {
         File file = new File(FILE_NAME);
-        if (!file.exists()) {
-            file.createNewFile();
-            System.out.println("'users.txt' created.");
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+                System.out.println("✅ 'users.txt' created.");
+            }
+        } catch (IOException e) {
+            System.out.println("❌ Error creating file: " + e.getMessage());
         }
     }
     public static void registerUser() throws IOException {
