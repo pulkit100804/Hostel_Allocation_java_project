@@ -26,3 +26,11 @@ public class Main {
                     System.out.println("Exiting... 🏁");
                     running = false;
                     break;
+                default:
+                    System.out.println("❌ Invalid choice. Try again.");
+            }
+        }
+        scanner.close();
+    }
+}
+
