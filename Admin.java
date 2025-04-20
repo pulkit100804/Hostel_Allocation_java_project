@@ -1,4 +1,4 @@
-
+//No exception is needed at this stage since its easy working 
 import java.util.Scanner;
 
 public class Admin {
