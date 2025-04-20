@@ -30,15 +30,17 @@ public class UserAuth {
         }
 
         if (userExists(username)) {
-            System.out.println(" Username already exists!");
+            System.out.println("❌ Username already exists!");
             return;
         }
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME, true));
-        bw.write(username + "," + password + "," + role);
-        bw.newLine();
-        bw.close();
-        System.out.println(" Registration successful!");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            bw.write(username + "," + password + "," + role);
+            bw.newLine();
+            System.out.println("✅ Registration successful!");
+        } catch (IOException e) {
+            System.out.println("❌ Error writing to file: " + e.getMessage());
+        }
     }
 
     public static void loginUser() throws IOException {
