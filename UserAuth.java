@@ -36,3 +36,26 @@ public class UserAuth {
         bw.close();
         System.out.println(" Registration successful!");
     }
+
+    public static void loginUser() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        String role = validateUser(username, password);
+        if (role == null) {
+            System.out.println("❌ Invalid credentials!");
+            return;
+        }
+
+        System.out.println("Login successful! Welcome, " + username);
+
+        if (role.equals("admin")) {
+            Admin.adminMenu();
+        } else {
+            Student.studentMenu(username);
+        }
+    }
+
