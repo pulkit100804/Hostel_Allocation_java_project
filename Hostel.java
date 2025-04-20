@@ -56,14 +56,13 @@ public class Hostel {
         return -1;
     }
         
-   public void showRoomAllocation() {
+    public void showRoomAllocation() {
         try (Connection conn = DBConnection.getConnection()) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations");
 
             if (!rs.isBeforeFirst()) {
-                System.out.println("No rooms allocated.");
-                return;
+                throw new RoomDataFetchException("No room data available to display.");
             }
 
             while (rs.next()) {
@@ -71,9 +70,10 @@ public class Hostel {
             }
 
             rs.close();
+        } catch (RoomDataFetchException e) {
+            System.out.println("⚠ " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("❌ Error fetching allocations: " + e.getMessage());
+            System.out.println("❌ SQL Error while fetching room data: " + e.getMessage());
         }
     }
 }
-
