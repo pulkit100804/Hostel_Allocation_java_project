@@ -24,3 +24,25 @@ public class Hostel {
         }
         return -1;
     }
+        
+    public void showRoomAllocation() {
+        try (Connection conn = DBConnection.getConnection()) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations");
+
+            if (!rs.isBeforeFirst()) {
+                System.out.println("No rooms allocated.");
+                return;
+            }
+
+            while (rs.next()) {
+                System.out.println("Room " + rs.getInt("room_no") + " -> " + rs.getString("student_username"));
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("❌ Error fetching allocations: " + e.getMessage());
+        }
+    }
+}
+
