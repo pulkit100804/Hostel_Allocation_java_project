@@ -1,6 +1,4 @@
-
 import java.sql.*;
-import java.util.*;
 
 class RoomAlreadyAllocatedException extends Exception {
     public RoomAlreadyAllocatedException(String message) {
@@ -21,32 +19,28 @@ class RoomDataFetchException extends Exception {
 }
 
 public class Hostel {
-    private static final int totalRooms = 10;
-
     public int allocateRoom(String username) {
         try (Connection conn = DBConnection.getConnection()) {
-            // Check if user already has a room
-            PreparedStatement checkStmt = conn.prepareStatement("SELECT room_no FROM room_allocations WHERE student_username = ?");
+            PreparedStatement checkStmt = conn.prepareStatement("SELECT room_number FROM allocations WHERE student_id = ?");
             checkStmt.setString(1, username);
             ResultSet checkRs = checkStmt.executeQuery();
             if (checkRs.next()) {
-                throw new RoomAlreadyAllocatedException("❗ User already has a room: Room " + checkRs.getInt("room_no"));
+                throw new RoomAlreadyAllocatedException("❗ User already has a room: Room " + checkRs.getInt("room_number"));
             }
 
             Statement stmt = conn.createStatement();
-            for (int i = 1; i <= totalRooms; i++) {
-                ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations WHERE room_no = " + i);
-                if (!rs.next()) {
-                    PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO room_allocations (room_no, student_username) VALUES (?, ?)");
-                    insertStmt.setInt(1, i);
-                    insertStmt.setString(2, username);
-                    insertStmt.executeUpdate();
-                    return i;
-                }
-                rs.close();
-            }
+            ResultSet roomSet = stmt.executeQuery("SELECT room_number FROM rooms WHERE vacancies > 0 LIMIT 1");
 
-            throw new RoomAllocationLimitReachedException("❗ All rooms are already allocated. Hostel full!");
+            if (roomSet.next()) {
+                int roomNo = roomSet.getInt("room_number");
+                PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO allocations (room_number, student_id) VALUES (?, ?)");
+                insertStmt.setInt(1, roomNo);
+                insertStmt.setString(2, username);
+                insertStmt.executeUpdate();
+                return roomNo;
+            } else {
+                throw new RoomAllocationLimitReachedException("❗ All rooms are already allocated. Hostel full!");
+            }
 
         } catch (RoomAlreadyAllocatedException | RoomAllocationLimitReachedException e) {
             System.out.println(e.getMessage());
@@ -55,18 +49,18 @@ public class Hostel {
         }
         return -1;
     }
-        
+
     public void showRoomAllocation() {
         try (Connection conn = DBConnection.getConnection()) {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM room_allocations");
+            ResultSet rs = stmt.executeQuery("SELECT r.room_number, a.student_id FROM allocations a JOIN rooms r ON a.room_number = r.room_number ORDER BY r.room_number");
 
             if (!rs.isBeforeFirst()) {
                 throw new RoomDataFetchException("No room data available to display.");
             }
 
             while (rs.next()) {
-                System.out.println("Room " + rs.getInt("room_no") + " -> " + rs.getString("student_username"));
+                System.out.println("Room " + rs.getInt("room_number") + " -> " + rs.getString("student_id"));
             }
 
             rs.close();
