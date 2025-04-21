@@ -1,4 +1,4 @@
-//No exception handling required at this stage 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -18,10 +18,18 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    UserAuth.registerUser();
+                    try {
+                        UserAuth.registerUser();
+                    } catch (IOException e) {
+                        System.out.println("❌ Error during registration: " + e.getMessage());
+                    }
                     break;
                 case 2:
-                    UserAuth.loginUser();
+                    try {
+                        UserAuth.loginUser();
+                    } catch (IOException e) {
+                        System.out.println("❌ Error during login: " + e.getMessage());
+                    }
                     break;
                 case 3:
                     System.out.println("Exiting... 🏁");
@@ -34,4 +42,3 @@ public class Main {
         scanner.close();
     }
 }
-
