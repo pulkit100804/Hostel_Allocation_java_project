@@ -1,6 +1,6 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class Student {
@@ -9,7 +9,7 @@ public class Student {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n🏠 Student Panel 🏠");
+            System.out.println("\n\uD83C\uDFE0 Student Panel \uD83C\uDFE0");
             System.out.println("1. View Assigned Room");
             System.out.println("2. Logout");
             System.out.print("Choose an option: ");
@@ -32,17 +32,17 @@ public class Student {
 
     private static void viewAssignedRoom(String username) {
         try (Connection conn = DBConnection.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT room_no FROM room_allocations WHERE student_username = '" + username + "'");
+            PreparedStatement stmt = conn.prepareStatement("SELECT room_number FROM allocations WHERE student_id = ?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                System.out.println("✅ Your assigned room is: Room " + rs.getInt("room_no"));
+                System.out.println("✅ Your assigned room is: Room " + rs.getInt("room_number"));
             } else {
                 System.out.println("❌ No room assigned.");
             }
 
             rs.close();
-            stmt.close();
         } catch (Exception e) {
             System.out.println("❌ Error fetching room info: " + e.getMessage());
         }
