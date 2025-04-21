@@ -1,4 +1,3 @@
-//No exception is needed at this stage since its easy working 
 import java.util.Scanner;
 
 public class Admin {
@@ -8,7 +7,7 @@ public class Admin {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n🛠 Admin Panel 🛠");
+            System.out.println("\n\uD83D\uDEE0 Admin Panel \uD83D\uDEE0");
             System.out.println("1. Allocate Room");
             System.out.println("2. Show Room Allocations");
             System.out.println("3. Logout");
