@@ -1,15 +1,30 @@
-//No changes required
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/hostel_management";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "Archie@25";
+    private static final String URL = "jdbc:mysql://localhost:3306/hostel_management";
+    private static final String USER = "root";
+    private static final String PASSWORD = "Test123$";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+    static {
+        try {
+            // This loads the MySQL JDBC driver class
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("✅ MySQL JDBC Driver loaded successfully.");
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ MySQL JDBC Driver not found—check your classpath!");
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() {
+        try {
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("❌ DB error during connection: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
-
